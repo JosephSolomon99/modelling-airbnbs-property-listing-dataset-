@@ -65,10 +65,10 @@ def clean_tabular_data():
         [dataframe[column].fillna(value=1, inplace=True) for column in columns]
 
 def main():
-    filepath = r'airbnb-property-listings/tabular_data/listing.csv'
-    listings = pd.read_csv(filepath)
-    clean_tabular_data = clean_tabular_data(listings)
-    clean_tabular_data.to_csv('clean_tabular_data.csv', index=False, header=True, encoding='utf-8')
+    path = r'airbnb-property-listings/tabular_data/listing.csv'
+    tabular_data = pd.read_csv(path)
+    clean_tabular_data = clean_tabular_data(tabular_data)
+    clean_tabular_data.to_csv(os.path.join(path,r'clean_tabular_data.csv', index=False, header=True, encoding='utf-8'))
     return
 
 if __name__ == "__main__":
