@@ -1,4 +1,3 @@
-#%%
 import pandas as pd
 
 def remove_rows_with_missing_ratings(dataframe: pd.DataFrame):
