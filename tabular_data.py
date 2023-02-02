@@ -3,7 +3,6 @@ import pandas as pd
 def remove_rows_with_missing_ratings(dataframe: pd.DataFrame):
     dataframe.drop(columns=['Unnamed: 19'], inplace=True)
     dataframe.dropna(subset=['Cleanliness_rating','Accuracy_rating','Communication_rating','Location_rating','Check-in_rating','Value_rating'], inplace=True)
-    dataframe.reset_index(drop=True, inplace=True)
     return dataframe
     
 def combine_description_strings(dataframe: pd.DataFrame, column_name: str):

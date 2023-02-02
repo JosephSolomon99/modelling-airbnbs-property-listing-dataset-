@@ -1,0 +1,6 @@
+unittest
+pandas
+numpy
+sys
+boto3
+os
