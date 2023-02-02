@@ -33,6 +33,9 @@ def clean_tabular_data(dataframe: pd.DataFrame) -> pd.DataFrame:
     dataframe = set_default_feature_value(dataframe)
     return dataframe
 
+def create():
+    pass
+
 def main():
     path = r'airbnb-property-listings/listing.csv'
     raw_data = pd.read_csv(path)
