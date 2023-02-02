@@ -1,6 +1,4 @@
-unittest
-pandas
-numpy
-sys
-boto3
-os
+.
+pandas==1.4.1
+numpy==1.22.2
+boto3==1.26.56
