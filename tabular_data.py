@@ -32,16 +32,12 @@ def clean_tabular_data(dataframe: pd.DataFrame) -> pd.DataFrame:
     dataframe = combine_description_strings(dataframe, 'Description')
     dataframe = set_default_feature_value(dataframe)
     return dataframe
-
-def create():
-    pass
-
+    
 def main():
     path = r'airbnb-property-listings/listing.csv'
     raw_data = pd.read_csv(path)
     processed_data = clean_tabular_data(raw_data)
     processed_data.to_csv('airbnb-property-listings/tabular_data/clean_tabular_data.csv', index=False, header=True, encoding='utf-8')
-    pass
-
+    
 if __name__ == "__main__":
      main()
