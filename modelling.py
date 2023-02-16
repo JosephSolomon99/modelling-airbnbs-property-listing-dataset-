@@ -1,12 +1,14 @@
+import os
+import json
+import joblib
 from tabular_data import load_airbnb
-from sklearn.linear_model import SGDRegressor
-from sklearn.metrics import mean_squared_error, r2_score, make_scorer
 from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.preprocessing import StandardScaler
-from sklearn.pipeline import make_pipeline
-import itertools
-import typing
-import numpy as np
+from sklearn.linear_model import SGDRegressor
+from sklearn.metrics import mean_squared_error, r2_score, make_scorer
+# import itertools
+# import typing
+# import numpy as np
 
 
 features, labels = load_airbnb('airbnb-property-listings/tabular_data/clean_tabular_data.csv','Price_Night')
@@ -29,7 +31,7 @@ hyperparameters = {"loss":["squared_error", "huber", "epsilon_insensitive", "squ
 def rmse(y_true, y_pred):
     return mean_squared_error(y_true, y_pred, squared=False)
 
-def tune_regression_model_hyperparameters(model,X_train,y_train):
+def tune_regression_model_hyperparameters(model):
     
     gridSearchCV = GridSearchCV(estimator=model, param_grid=hyperparameters, cv=5, verbose=0, n_jobs=-1, scoring=make_scorer(rmse))
     gridSearchCVResults = gridSearchCV.fit(X_train, y_train)
@@ -37,12 +39,50 @@ def tune_regression_model_hyperparameters(model,X_train,y_train):
     best_rmse = gridSearchCVResults.best_score_
     best_hyperparams = gridSearchCVResults.best_params_
     best_model = gridSearchCVResults.best_estimator_
-    
     return best_model, best_hyperparams, best_rmse
-best_model, best_hyperparams, best_rmse = tune_regression_model_hyperparameters(model,X_train,y_train)
-print(best_model)
-print(best_hyperparams)
-print(best_rmse)
+
+def evaluate_model(best_model, best_rmse):
+
+    best_metrics = {}
+
+    y_train_pred = best_model.predict(X_train)
+    y_test_pred = best_model.predict(X_test)
+    train_loss_mse = mean_squared_error(y_train, y_train_pred)
+    test_loss_mse = mean_squared_error(y_test, y_test_pred)
+    train_r2 = r2_score(y_train, y_train_pred)
+    test_r2 = r2_score(y_test, y_test_pred)
+      
+    best_metrics["validation_RMSE"] = best_rmse
+    best_metrics["train_loss_MSE"] = train_loss_mse
+    best_metrics["test_loss_MSE"] = test_loss_mse
+    best_metrics["train_R2"] = train_r2
+    best_metrics["test_R2"] = test_r2
+    return best_metrics
+
+
+def save_model(best_model, best_hyperparams, best_metrics, folder):
+    # Save Model
+    os.makedirs(folder, exist_ok=True)
+    joblib.dump(best_model, os.path.join(folder, 'model.joblib'))
+
+    # Save Hyperparameters metrics to a JSON file
+    with open(os.path.join(folder, 'hyperparameters.json'), 'w') as f:
+        json.dump(best_hyperparams, f)
+
+    # Save the performance metrics to a JSON file
+    with open(os.path.join(folder, 'metrics.json'), 'w') as f:
+        json.dump(best_metrics, f)
+
+def main():
+    best_model, best_hyperparams, best_rmse = tune_regression_model_hyperparameters(model)
+    best_metrics = evaluate_model(best_model, best_rmse)
+    save_model(best_model,best_hyperparams,best_metrics, 'models/regression')
+
+if __name__ == "__main__":
+     main()
+    
+
+## Grid Search from Scratch
 
 # def grid_search(hyperparameters: typing.Dict[str, typing.Iterable]):
 #     keys, values = zip(*hyperparameters.items())
