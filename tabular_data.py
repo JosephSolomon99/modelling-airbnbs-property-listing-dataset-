@@ -29,10 +29,11 @@ def clean_tabular_data(dataframe: pd.DataFrame) -> pd.DataFrame:
 
 def load_airbnb(filepath, label):
     data = pd.read_csv(filepath)
-    features = data.select_dtypes(include=[np.number])
-    features = features.drop(columns=label)
-    labels = data[label]   
+    features = data.drop(columns=label)
+    features = features.select_dtypes(include=[np.number])
+    labels = data[label]
     return features, labels
+
 
 def main():
     path = r'airbnb-property-listings/listing.csv'

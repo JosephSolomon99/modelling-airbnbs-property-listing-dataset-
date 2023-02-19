@@ -119,8 +119,3 @@ def find_best_model():
 if __name__ == "__main__":
 #    evaluate_all_models()
     best_model,hyperparams, metrics = find_best_model()
-
-#%%
-# Load the best model
-
-# %%
